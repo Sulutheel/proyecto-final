@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Empireo - Simulación compartir con clave</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f6f7;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    color: #4f4f89;
+    text-align: center;
+  }
+  .gallery {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  .photo {
+    border: 3px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    width: 180px;
+  }
+  .photo img {
+    width: 100%;
+    border-radius: 10px;
+    display: block;
+  }
+  .photo.selected {
+    border-color: #4f4f89;
+  }
+  .share-section {
+    text-align: center;
+    margin-top: 20px;
+    display: none;
+  }
+  .share-btn {
+    background-color: #e4405f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .share-btn:hover {
+    background-color: #b62e48;
+  }
+  .message-box {
+    max-width: 320px;
+    background: white;
+    padding: 20px;
+    margin: 20px auto 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  .hidden {
+    display: none;
+  }
+  input[type="password"] {
+    width: 80%;
+    padding: 8px;
+    font-size: 1rem;
+    margin-top: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  button.submit-key {
+    margin-top: 12px;
+    background-color: #4f4f89;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button.submit-key:hover {
+    background-color: #383863;
+  }
+  .error {
+    color: #d93025;
+    margin-top: 10px;
+  }
+  .success {
+    color: #188038;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>Empireo - Compartir Foto con Clave</h1>
+
+<div class="gallery" id="gallery">
+  <div class="photo" data-title="Amanecer en la Montaña" data-url="https://images.unsplash.com/photo-1506744038136-46273834b3fb">
+    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Amanecer en la Montaña" />
+  </div>
+  <div class="photo" data-title="Tarde en la Ciudad" data-url="https://images.unsplash.com/photo-1519681393784-d120267933ba">
+    <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba" alt="Tarde en la Ciudad" />
+  </div>
+  <div class="photo" data-title="Captura Gamer" data-url="https://images.unsplash.com/photo-1518770660439-4636190af475">
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" alt="Captura Gamer" />
+  </div>
+</div>
+
+<div class="share-section" id="shareSection">
+  <p>Has seleccionado: <strong id="selectedTitle"></strong></p>
+  <button class="share-btn" id="shareInstagramBtn">Compartir en Instagram</button>
+</div>
+
+<div class="message-box hidden" id="redirectMessage">
+  <p>Redirigiendo a Instagram...</p>
+</div>
+
+<div class="message-box hidden" id="securityKeySection">
+  <p>Por favor, ingresa la clave de seguridad para compartir:</p>
+  <input type="password" id="securityKeyInput" placeholder="Clave de seguridad" />
+  <br />
+  <button class="submit-key" id="submitKeyBtn">Enviar</button>
+  <p class="error hidden" id="errorMessage">Clave incorrecta. Intenta de nuevo.</p>
+</div>
+
+<div class="message-box hidden" id="successMessage">
+  <p class="success">¡Foto compartida con éxito en Instagram! 📸</p>
+</div>
+
+<script>
+  const photos = document.querySelectorAll('.photo');
+  const shareSection = document.getElementById('shareSection');
+  const selectedTitle = document.getElementById('selectedTitle');
+  const shareInstagramBtn = document.getElementById('shareInstagramBtn');
+  const redirectMessage = document.getElementById('redirectMessage');
+  const securityKeySection = document.getElementById('securityKeySection');
+  const submitKeyBtn = document.getElementById('submitKeyBtn');
+  const securityKeyInput = document.getElementById('securityKeyInput');
+  const errorMessage = document.getElementById('errorMessage');
+  const successMessage = document.getElementById('successMessage');
+
+  let selectedPhotoTitle = null;
+
+  photos.forEach(photo => {
+    photo.addEventListener('click', () => {
+      photos.forEach(p => p.classList.remove('selected'));
+      photo.classList.add('selected');
+      selectedPhotoTitle = photo.getAttribute('data-title');
+      selectedTitle.textContent = selectedPhotoTitle;
+      shareSection.style.display = 'block';
+
+      // Ocultar otros mensajes si estaban visibles
+      redirectMessage.classList.add('hidden');
+      securityKeySection.classList.add('hidden');
+      successMessage.classList.add('hidden');
+      errorMessage.classList.add('hidden');
+      securityKeyInput.value = '';
+    });
+  });
+
+  shareInstagramBtn.addEventListener('click', () => {
+    // Mostrar mensaje redirigiendo
+    shareSection.style.display = 'none';
+    redirectMessage.classList.remove('hidden');
+
+    // Simular redirección por 2 segundos, luego pedir clave
+    setTimeout(() => {
+      redirectMessage.classList.add('hidden');
+      securityKeySection.classList.remove('hidden');
+      securityKeyInput.focus();
+    }, 2000);
+  });
+
+  submitKeyBtn.addEventListener('click', () => {
+    const key = securityKeyInput.value.trim();
+    const correctKey = "Empireo123";
+
+    if (key === correctKey) {
+      errorMessage.classList.add('hidden');
+      securityKeySection.classList.add('hidden');
+      successMessage.classList.remove('hidden');
+    } else {
+      errorMessage.classList.remove('hidden');
+    }
+  });
+
+  // Permitir pulsar Enter para enviar clave
+  securityKeyInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      submitKeyBtn.click();
+    }
+  });
+</script>
+
+</body>
+</html>

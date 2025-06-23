@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Empireo - Blog Visual</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f6f7;
+      color: #333;
+    }
+
+    header {
+      background-color: #1e1e2f;
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+
+    .user-profile img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 1rem;
+      border: 3px solid #4f4f89;
+    }
+
+    .user-profile .username {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 2rem;
+    }
+
+    .photo-card {
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .photo-title {
+      padding: 1rem;
+      font-weight: bold;
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .share-section {
+      padding: 1rem;
+      text-align: center;
+      background-color: #f0f0f0;
+      border-top: 1px solid #ddd;
+    }
+
+    .share-btn {
+      background-color: #4f4f89;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.3s ease;
+    }
+
+    .share-btn:hover {
+      background-color: #383863;
+    }
+
+    .social-icons {
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .share-section:hover .social-icons {
+      display: block;
+    }
+
+    .icon {
+      font-size: 1.2rem;
+      margin: 0 8px;
+      cursor: pointer;
+    }
+
+    .instagram {
+      color: #e4405f;
+    }
+
+    .tiktok {
+      color: #000;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background-color: #e0e0e0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Empireo</h1>
+    <p>Tu espacio visual seguro y privado</p>
+  </header>
+
+  <section class="user-profile">
+    <img src="https://i.pravatar.cc/150?img=12" alt="Foto de usuario">
+    <div class="username">@luis_fotos2025</div>
+  </section>
+
+  <section class="gallery">
+    <div class="photo-card">
+      <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb" alt="Montaña">
+      <div class="photo-title">Amanecer en la montaña</div>
+      <div class="share-section">
+        <button class="share-btn">Compartir</button>
+        <div class="social-icons">
+          <span class="icon instagram">📸 Instagram</span>
+          <span class="icon tiktok">🎵 TikTok</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-card">
+      <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba" alt="Ciudad">
+      <div class="photo-title">Tarde en la ciudad</div>
+      <div class="share-section">
+        <button class="share-btn">Compartir</button>
+        <div class="social-icons">
+          <span class="icon instagram">📸 Instagram</span>
+          <span class="icon tiktok">🎵 TikTok</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="photo-card">
+      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475" alt="Gamer">
+      <div class="photo-title">Captura gamer</div>
+      <div class="share-section">
+        <button class="share-btn">Compartir</button>
+        <div class="social-icons">
+          <span class="icon instagram">📸 Instagram</span>
+          <span class="icon tiktok">🎵 TikTok</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Empireo · Privacidad protegida · Creado por y para creadores visuales
+  </footer>
+
+</body>
+</html>
+

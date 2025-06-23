@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foto subida - Empireo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f6f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .confirmation-box {
+      background: white;
+      padding: 2rem 3rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 350px;
+    }
+    h2 {
+      color: #4f4f89;
+      margin-bottom: 1rem;
+    }
+    .social {
+      font-weight: bold;
+      font-size: 1.3rem;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    .icon {
+      font-size: 2rem;
+    }
+    .instagram {
+      color: #e4405f;
+    }
+    .tiktok {
+      color: #000;
+    }
+    .facebook {
+      color: #1877f2;
+    }
+    button {
+      margin-top: 2rem;
+      background-color: #4f4f89;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background-color: #383863;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="confirmation-box">
+    <h2>¡Foto subida con éxito!</h2>
+    <p>Tu foto ha sido publicada en:</p>
+    <div class="social" id="socialPlatform">
+      <!-- Se llenará con JS -->
+    </div>
+    <button onclick="window.location.href='upload.html'">Subir otra foto</button>
+  </div>
+
+  <script>
+    const socialDiv = document.getElementById('socialPlatform');
+    const platforms = [
+      { name: 'Instagram', icon: '📸', className: 'instagram' },
+      { name: 'TikTok', icon: '🎵', className: 'tiktok' },
+      { name: 'Facebook', icon: '👍', className: 'facebook' }
+    ];
+
+    // Elegir aleatoriamente una plataforma para simular
+    const randomPlatform = platforms[Math.floor(Math.random() * platforms.length)];
+
+    socialDiv.innerHTML = `
+      <span class="icon ${randomPlatform.className}">${randomPlatform.icon}</span>
+      <span>${randomPlatform.name}</span>
+    `;
+  </script>
+
+</body>
+</html>
