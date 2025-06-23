@@ -43,7 +43,7 @@ const preguntasSeguridad = [
   "¿Cuál es el nombre de tu escuela primaria?",
 ];
 
-const backendURL = "http://localhost:3000";
+const backendURL = "https://proyecto-final-rxui.onrender.com/";
 
 export default function Registro() {
   const [name, setName] = useState("");
