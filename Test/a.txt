@@ -1,0 +1,9 @@
+por primera vez 
+git init
+
+
+
+esto es hacer cuando hagas cambios
+git add.
+git commit -m "mensaje"
+git push
