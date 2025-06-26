@@ -8,6 +8,8 @@ import {
   Box,
   Stack,
   IconButton,
+  Modal,
+  TextField,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import logo from "../assets/empireo.jpg";
@@ -63,7 +65,7 @@ const Hero = styled(Box)({
   height: "100vh",
   display: "flex",
   alignItems: "center",
-  justifyContent: "flex-start", // Alineación izquierda horizontal
+  justifyContent: "flex-start",
   color: Gold,
   padding: "2rem 4rem",
   position: "relative",
@@ -82,8 +84,8 @@ const Hero = styled(Box)({
 const HeroContent = styled(Box)({
   position: "relative",
   zIndex: 2,
-  maxWidth: "700px",  // Limita ancho para que no ocupe toda la pantalla
-  textAlign: "left",  // Alinea texto a la izquierda
+  maxWidth: "700px",
+  textAlign: "left",
 });
 
 const Footer = styled(Box)({
@@ -106,16 +108,61 @@ const GallerySection = styled(Box)({
 
 export default function Empireo() {
   const [activeSection, setActiveSection] = useState("historia");
+  const [openLogin, setOpenLogin] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const [usuario, setUsuario] = useState(null);
   const navigate = useNavigate();
 
   const showHistory = () => setActiveSection("historia");
   const showSocial = () => setActiveSection("social");
 
+  const handleOpenLogin = () => {
+    setMensaje("");
+    setOpenLogin(true);
+  };
+  const handleCloseLogin = () => setOpenLogin(false);
+
+  const handleLogin = async () => {
+    setMensaje("");
+    try {
+      const response = await fetch("http://localhost:3000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setMensaje(data.error || "Error al iniciar sesión");
+        return;
+      }
+
+      const { token, usuario } = data;
+
+      localStorage.setItem("token", token);
+      setUsuario(usuario);
+      setMensaje("✅ Inicio de sesión exitoso");
+      setOpenLogin(false);
+
+      // REDIRECCIÓN A NUBE
+      navigate("/nube");
+
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      setMensaje("❌ Error al conectar con el servidor");
+    }
+  };
+
   const galleryImages = [
-    "https://images.unsplash.com/photo-1506744038136-46273834b3fb", // Naturaleza
-    "https://images.unsplash.com/photo-1512453979798-5ea266f8880c", // Ciudad futurista
-    "https://images.unsplash.com/photo-1485217988980-11786ced9454", // Montaña nevada
-    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e", // Mar con cielo
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb",
+    "https://images.unsplash.com/photo-1512453979798-5ea266f8880c",
+    "https://images.unsplash.com/photo-1485217988980-11786ced9454",
+    "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
   ];
 
   return (
@@ -133,9 +180,9 @@ export default function Empireo() {
             Empireo
           </Typography>
           <Stack direction="row" spacing={2}>
-            <NavButton onClick={showHistory}>Historia</NavButton>
+            <NavButton onClick={showHistory}>Inicio</NavButton>
             <NavButton onClick={showSocial}>Síguenos</NavButton>
-            <NavButton onClick={() => navigate("/login")}>Iniciar Sesión</NavButton>
+            <NavButton onClick={handleOpenLogin}>Iniciar Sesión</NavButton>
             <NavButton onClick={() => navigate("/registro")}>Registrar</NavButton>
           </Stack>
         </Toolbar>
@@ -282,6 +329,90 @@ export default function Empireo() {
           </Box>
         )}
       </Footer>
+
+      {/* MODAL LOGIN */}
+      <Modal open={openLogin} onClose={handleCloseLogin}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            bgcolor: Black,
+            color: Gold,
+            border: `2px solid ${Gold}`,
+            borderRadius: 2,
+            boxShadow: 24,
+            p: 4,
+            width: "90%",
+            maxWidth: 400,
+          }}
+        >
+          <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
+            Iniciar Sesión
+          </Typography>
+          <TextField
+            fullWidth
+            label="Email"
+            variant="filled"
+            type="email"
+            sx={{
+              mb: 2,
+              input: { color: Gold },
+              label: { color: Gold },
+              "& .MuiFilledInput-root": {
+                backgroundColor: Black,
+              },
+            }}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <TextField
+            fullWidth
+            label="Contraseña"
+            variant="filled"
+            type="password"
+            sx={{
+              mb: 2,
+              input: { color: Gold },
+              label: { color: Gold },
+              "& .MuiFilledInput-root": {
+                backgroundColor: Black,
+              },
+            }}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {mensaje && (
+            <Typography
+              variant="body2"
+              sx={{
+                mb: 2,
+                color: mensaje.startsWith("✅") ? "limegreen" : "tomato",
+                fontWeight: "bold",
+              }}
+            >
+              {mensaje}
+            </Typography>
+          )}
+          <Stack direction="row" spacing={2} justifyContent="flex-end">
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleCloseLogin}
+            >
+              Cancelar
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ backgroundColor: Gold, color: Black }}
+              onClick={handleLogin}
+            >
+              Entrar
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
     </Box>
   );
 }
