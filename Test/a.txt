@@ -7,3 +7,5 @@ esto es hacer cuando hagas cambios
 git add.
 git commit -m "mensaje"
 git push
+
+sistema de ficheros fs y guardarlos a mongodb en path

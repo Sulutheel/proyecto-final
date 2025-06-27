@@ -121,39 +121,33 @@ const ModalBox = styled(Box)({
 
 export default function Nube() {
   const [fotos, setFotos] = useState([
-  { url: "https://picsum.photos/id/1011/400/300", categoria: "paisajes" },
-  { url: "https://picsum.photos/id/1025/400/300", categoria: "mascotas" },
-  { url: "https://picsum.photos/id/1033/400/300", categoria: "redes", plataforma: "instagram" },
-  { url: "https://picsum.photos/id/1042/400/300", categoria: "redes", plataforma: "facebook" },
-  { url: "https://picsum.photos/id/1050/400/300", categoria: "paisajes" },
-  { url: "https://picsum.photos/id/1062/400/300", categoria: "mascotas" },
-  { url: "https://picsum.photos/id/1074/400/300", categoria: "redes", plataforma: "instagram" },
-  { url: "https://picsum.photos/id/1084/400/300", categoria: "redes", plataforma: "facebook" },
-]);
-
-
+    { url: "https://picsum.photos/id/1011/400/300", categoria: "paisajes" },
+    { url: "https://picsum.photos/id/1025/400/300", categoria: "mascotas" },
+    { url: "https://picsum.photos/id/1033/400/300", categoria: "redes", plataforma: "instagram" },
+    { url: "https://picsum.photos/id/1042/400/300", categoria: "redes", plataforma: "facebook" },
+    { url: "https://picsum.photos/id/1050/400/300", categoria: "paisajes" },
+    { url: "https://picsum.photos/id/1062/400/300", categoria: "mascotas" },
+    { url: "https://picsum.photos/id/1074/400/300", categoria: "redes", plataforma: "instagram" },
+    { url: "https://picsum.photos/id/1084/400/300", categoria: "redes", plataforma: "facebook" },
+  ]);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [claveModalOpen, setClaveModalOpen] = useState(false); // Modal para pedir clave
-  const [crearClaveModalOpen, setCrearClaveModalOpen] = useState(false); // Modal para crear clave si no existe
-
-  // Nueva foto
+  const [claveModalOpen, setClaveModalOpen] = useState(false);
+  const [crearClaveModalOpen, setCrearClaveModalOpen] = useState(false);
+  
   const [newFotoUrl, setNewFotoUrl] = useState("");
   const [newFotoCategoria, setNewFotoCategoria] = useState("paisajes");
   const [newFotoPlataforma, setNewFotoPlataforma] = useState("xbox");
   const [newFotoFile, setNewFotoFile] = useState(null);
   const [newFotoPreview, setNewFotoPreview] = useState(null);
 
-  // Clave de seguridad
   const [claveSeguridad, setClaveSeguridad] = useState(() => {
-    // Intentamos cargar la clave de localStorage
     return localStorage.getItem("claveSeguridad") || "";
   });
   const [claveIngresada, setClaveIngresada] = useState("");
 
-  // Estado para saber si estamos intentando subir foto o ver foto
-  const [accionActual, setAccionActual] = useState(null); // 'subir' o 'ver'
-  const [fotoSeleccionada, setFotoSeleccionada] = useState(null); // foto para ver si la clave es correcta
+  const [accionActual, setAccionActual] = useState(null);
+  const [fotoSeleccionada, setFotoSeleccionada] = useState(null);
 
   const iconMap = {
     xbox: <FaXbox />,
@@ -172,14 +166,12 @@ export default function Nube() {
         setNewFotoPreview(reader.result);
       };
       reader.readAsDataURL(file);
-      setNewFotoUrl(""); // limpiar url si hay archivo
+      setNewFotoUrl("");
     }
   };
 
-  // Función para abrir modal para agregar foto, primero pide clave si existe
   const abrirModalAgregarFoto = () => {
     if (!claveSeguridad) {
-      // No hay clave creada, pedir crear clave primero
       setCrearClaveModalOpen(true);
     } else {
       setAccionActual("subir");
@@ -188,7 +180,6 @@ export default function Nube() {
     }
   };
 
-  // Función para abrir foto (extraer) pidiendo clave
   const abrirFoto = (foto) => {
     if (!claveSeguridad) {
       alert("Primero debe crear una clave de seguridad para acceder a las fotos.");
@@ -201,22 +192,19 @@ export default function Nube() {
     }
   };
 
-  // Validar clave ingresada para acción actual
   const validarClave = () => {
     if (claveIngresada === claveSeguridad) {
       setClaveModalOpen(false);
       if (accionActual === "subir") {
         setModalOpen(true);
       } else if (accionActual === "ver") {
-        alert("Acceso concedido a la foto."); 
-        // Aquí podrías implementar vista ampliada o lo que desees
+        alert("Acceso concedido a la foto.");
       }
     } else {
       alert("Clave incorrecta");
     }
   };
 
-  // Guardar clave creada
   const guardarClave = () => {
     if (!claveIngresada) {
       alert("La clave no puede estar vacía");
@@ -228,7 +216,7 @@ export default function Nube() {
     alert("Clave de seguridad creada exitosamente");
   };
 
-  const handleAgregarFoto = () => {
+  const handleAgregarFoto = async () => {
     let url = newFotoUrl;
     if (newFotoFile) {
       url = newFotoPreview;
@@ -237,10 +225,12 @@ export default function Nube() {
       alert("Debes ingresar URL o subir una foto desde tu ordenador.");
       return;
     }
+
     const nuevaFoto = { url, categoria: newFotoCategoria };
     if (newFotoCategoria === "juegos" || newFotoCategoria === "redes") {
       nuevaFoto.plataforma = newFotoPlataforma;
     }
+
     setFotos([...fotos, nuevaFoto]);
     setNewFotoUrl("");
     setNewFotoFile(null);
@@ -248,6 +238,17 @@ export default function Nube() {
     setNewFotoCategoria("paisajes");
     setNewFotoPlataforma("xbox");
     setModalOpen(false);
+
+    try {
+      await fetch("http://localhost:3000/api/fotos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(nuevaFoto),
+      });
+    } catch (error) {
+      console.error("Error al guardar en MongoDB:", error);
+      alert("No se pudo guardar en la nube");
+    }
   };
 
   return (
@@ -255,7 +256,6 @@ export default function Nube() {
       <Header>
         <LogoImg src={logo} alt="Logo Empireo" />
         <Typography variant="h3" sx={{ color: Gold, fontWeight: "bold" }}>
-         
         </Typography>
       </Header>
 
@@ -272,13 +272,14 @@ export default function Nube() {
 
       <AddPhotoButton onClick={abrirModalAgregarFoto}>Agregar Foto</AddPhotoButton>
 
-      {/* Modal para agregar foto */}
+      {/* Modales (Agregar Foto, Clave, Crear Clave) se mantienen igual */}
+
+      {/* Modal Agregar Foto */}
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>
         <ModalBox>
           <Typography variant="h6" sx={{ color: Gold, fontWeight: "bold" }}>
             Agregar Nueva Foto
           </Typography>
-
           <TextField
             label="URL de la foto"
             variant="filled"
@@ -292,7 +293,6 @@ export default function Nube() {
             fullWidth
             sx={{ input: { color: Gold } }}
           />
-
           <Box>
             <input
               type="file"
@@ -310,7 +310,6 @@ export default function Nube() {
               </Box>
             )}
           </Box>
-
           <FormControl fullWidth>
             <InputLabel sx={{ color: Gold }}>Categoría</InputLabel>
             <Select
@@ -325,7 +324,6 @@ export default function Nube() {
               <MenuItem value="redes">Redes Sociales</MenuItem>
             </Select>
           </FormControl>
-
           {(newFotoCategoria === "juegos" || newFotoCategoria === "redes") && (
             <FormControl fullWidth>
               <InputLabel sx={{ color: Gold }}>Plataforma / Red</InputLabel>
@@ -351,7 +349,6 @@ export default function Nube() {
               </Select>
             </FormControl>
           )}
-
           <Button
             variant="contained"
             onClick={handleAgregarFoto}
