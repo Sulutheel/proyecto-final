@@ -43,7 +43,7 @@ const preguntasSeguridad = [
   "¿Cuál es el nombre de tu escuela primaria?",
 ];
 
-//const VITE_backendURL = `${VITE_backendURL}`;
+const backendURL = "http://localhost:3000";
 
 export default function Registro() {
   const [name, setName] = useState("");
@@ -112,7 +112,7 @@ export default function Registro() {
     };
 
     try {
-      const res = await fetch(`${VITE_backendURL}/api/registro`, {
+      const res = await fetch(`${backendURL}/api/registro`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
