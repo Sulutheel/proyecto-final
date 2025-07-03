@@ -11,6 +11,7 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import logo from "../assets/empireo.jpg";
 import {
   FaXbox,
@@ -42,7 +43,6 @@ const LogoImg = styled("img")({
   height: 80,
   borderRadius: "50%",
   marginRight: "1rem",
-  boxShadow: `0 0 15px ${Gold}`,
 });
 
 const SectionTitle = styled(Typography)({
@@ -120,6 +120,8 @@ const ModalBox = styled(Box)({
 });
 
 export default function Nube() {
+  const navigate = useNavigate();
+
   const [fotos, setFotos] = useState([
     { url: "https://picsum.photos/id/1011/400/300", categoria: "paisajes" },
     { url: "https://picsum.photos/id/1025/400/300", categoria: "mascotas" },
@@ -251,12 +253,31 @@ export default function Nube() {
     }
   };
 
+  const handleCerrarSesion = () => {
+    // Aquí podrías limpiar estados, tokens, contextos, etc. si tienes
+    navigate("/"); // Redirige al login o Empireo.jsx
+  };
+
   return (
     <Container>
       <Header>
         <LogoImg src={logo} alt="Logo Empireo" />
         <Typography variant="h3" sx={{ color: Gold, fontWeight: "bold" }}>
+          {/* Título o espacio para nombre usuario si quieres */}
         </Typography>
+        <Button
+          onClick={handleCerrarSesion}
+          sx={{
+            marginLeft: "auto",
+            backgroundColor: Gold,
+            color: Black,
+            fontWeight: "bold",
+            "&:hover": { backgroundColor: "#a67d34" },
+          }}
+          variant="contained"
+        >
+          Cerrar sesión
+        </Button>
       </Header>
 
       <GalleryGrid>
@@ -271,8 +292,6 @@ export default function Nube() {
       </GalleryGrid>
 
       <AddPhotoButton onClick={abrirModalAgregarFoto}>Agregar Foto</AddPhotoButton>
-
-      {/* Modales (Agregar Foto, Clave, Crear Clave) se mantienen igual */}
 
       {/* Modal Agregar Foto */}
       <Modal open={modalOpen} onClose={() => setModalOpen(false)}>

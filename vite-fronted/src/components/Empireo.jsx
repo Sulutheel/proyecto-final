@@ -398,7 +398,7 @@ export default function Empireo() {
           <Stack direction="row" spacing={2} justifyContent="flex-end">
             <Button
               variant="outlined"
-              color="inherit"
+              sx={{ backgroundColor: Gold, color: Black }}
               onClick={handleCloseLogin}
             >
               Cancelar
